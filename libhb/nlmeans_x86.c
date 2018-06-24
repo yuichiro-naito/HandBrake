@@ -10,7 +10,7 @@
 
 #include "hb.h"     // needed for ARCH_X86
 
-#if defined(ARCH_X86)
+#if defined(ARCH_X86) && defined(__X86_64)
 
 #include <emmintrin.h>
 
