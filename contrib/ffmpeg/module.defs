@@ -23,8 +23,8 @@ FFMPEG.CONFIGURE.env.LOCAL_PATH = PATH="$(call fn.ABSOLUTE,$(CONTRIB.build/)bin)
 FFMPEG.BUILD.env                = PATH="$(call fn.ABSOLUTE,$(CONTRIB.build/)bin):$(PATH)"
 
 ifeq (freebsd,$(BUILD.system))
-	FFMPEG.CONFIGURE.env += CFLAGS=-I/usr/local/include
-	FFMPEG.CONFIGURE.env += LDFLAGS=-L/usr/local/lib
+	FFMPEG.CONFIGURE.env += CFLAGS=-I$(LOCALBASE)/include
+	FFMPEG.CONFIGURE.env += LDFLAGS=-L$(LOCALBASE)/lib
 endif
 
 FFMPEG.CONFIGURE.extra = \

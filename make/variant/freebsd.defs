@@ -1,7 +1,9 @@
 TARGET.dylib.ext = .so
 
-GCC.I       = /usr/local/include
-GCC.L       = /usr/local/lib
+LOCALBASE  ?= /usr/local
+
+GCC.I       = $(LOCALBASE)/include
+GCC.L       = $(LOCALBASE)/lib
 GCC.D       = LIBICONV_PLUG
 
 GCC.args.dylib = -shared
