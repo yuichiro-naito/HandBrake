@@ -25,7 +25,7 @@ namespace HandBrake.Interop.Interop.Json.Encode
         /// <summary>
         /// Gets or sets the codec.
         /// </summary>
-        public int Encoder { get; set; }
+        public string Encoder { get; set; }
 
         /// <summary>
         /// Gets or sets the level.
@@ -76,11 +76,6 @@ namespace HandBrake.Interop.Interop.Json.Encode
         /// Gets or sets the tune.
         /// </summary>
         public string Tune { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether hw decode.
-        /// </summary>
-        public bool HWDecode { get; set; }
 
         /// <summary>
         /// Gets or sets the qsv.
