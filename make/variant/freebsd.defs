@@ -1,6 +1,7 @@
-TARGET.dylib.ext = .so
-
+# LOCALBASE is where FreeBSD ports are installed. default is '/usr/local'.
 LOCALBASE  ?= /usr/local
+
+TARGET.dylib.ext = .so
 
 GCC.I       = $(LOCALBASE)/include
 GCC.L       = $(LOCALBASE)/lib
