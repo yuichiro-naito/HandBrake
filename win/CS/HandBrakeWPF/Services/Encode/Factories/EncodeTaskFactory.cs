@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EncodeFactory.cs" company="HandBrake Project (http://handbrake.fr)">
+// <copyright file="EncodeTaskFactory.cs" company="HandBrake Project (http://handbrake.fr)">
 //   This file is part of the HandBrake source code - It may be used under the terms of the GNU General Public License.
 // </copyright>
 // <summary>
@@ -14,7 +14,6 @@ namespace HandBrakeWPF.Services.Encode.Factories
     using System.Globalization;
     using System.Linq;
     using System.Runtime.InteropServices;
-    using System.Runtime.InteropServices.ComTypes;
 
     using HandBrake.Interop.Interop;
     using HandBrake.Interop.Interop.HbLib;
@@ -27,24 +26,24 @@ namespace HandBrakeWPF.Services.Encode.Factories
 
     using Newtonsoft.Json.Linq;
 
-    using AudioEncoder = HandBrakeWPF.Services.Encode.Model.Models.AudioEncoder;
-    using AudioEncoderRateType = HandBrakeWPF.Services.Encode.Model.Models.AudioEncoderRateType;
-    using AudioTrack = HandBrakeWPF.Services.Encode.Model.Models.AudioTrack;
-    using ChapterMarker = HandBrakeWPF.Services.Encode.Model.Models.ChapterMarker;
-    using EncodeTask = HandBrakeWPF.Services.Encode.Model.EncodeTask;
-    using FramerateMode = HandBrakeWPF.Services.Encode.Model.Models.FramerateMode;
-    using OutputFormat = HandBrakeWPF.Services.Encode.Model.Models.OutputFormat;
-    using PointToPointMode = HandBrakeWPF.Services.Encode.Model.Models.PointToPointMode;
+    using AudioEncoder = Model.Models.AudioEncoder;
+    using AudioEncoderRateType = Model.Models.AudioEncoderRateType;
+    using AudioTrack = Model.Models.AudioTrack;
+    using ChapterMarker = Model.Models.ChapterMarker;
+    using EncodeTask = Model.EncodeTask;
+    using FramerateMode = Model.Models.FramerateMode;
+    using OutputFormat = Model.Models.OutputFormat;
+    using PointToPointMode = Model.Models.PointToPointMode;
     using Subtitle = HandBrake.Interop.Interop.Json.Encode.Subtitles;
-    using SubtitleTrack = HandBrakeWPF.Services.Encode.Model.Models.SubtitleTrack;
+    using SubtitleTrack = Model.Models.SubtitleTrack;
     using SystemInfo = HandBrake.Interop.Utilities.SystemInfo;
-    using Validate = HandBrakeWPF.Helpers.Validate;
+    using Validate = Helpers.Validate;
 
     /// <summary>
     /// This factory takes the internal EncodeJob object and turns it into a set of JSON models
     /// that can be deserialized by libhb.
     /// </summary>
-    internal class EncodeFactory
+    internal class EncodeTaskFactory
     {
         /// <summary>
         /// The create.
@@ -147,7 +146,7 @@ namespace HandBrakeWPF.Services.Encode.Factories
                 },
                 ChapterMarkers = job.IncludeChapterMarkers,
                 AlignAVStart = job.AlignAVStart,
-                Mux = HBFunctions.hb_container_get_from_name(job.OutputFormat == OutputFormat.Mp4 ? "av_mp4" : "av_mkv"), // TODO tidy up.
+                Mux = EnumHelper<OutputFormat>.GetShortName(job.OutputFormat), 
                 ChapterList = new List<Chapter>()
             };
 
@@ -271,7 +270,7 @@ namespace HandBrakeWPF.Services.Encode.Factories
             Validate.NotNull(videoEncoder, "Video encoder " + job.VideoEncoder + " not recognized.");
             if (videoEncoder != null)
             {
-                video.Encoder = videoEncoder.Id;
+                video.Encoder = videoEncoder.ShortName;
             }
 
             string advancedOptions = job.ShowAdvancedTab ? job.AdvancedEncoderOptions : string.Empty;
@@ -331,19 +330,19 @@ namespace HandBrakeWPF.Services.Encode.Factories
         {
             Audio audio = new Audio();
 
-            List<uint> copyMaskList = new List<uint>();
-            if (job.AllowedPassthruOptions.AudioAllowAACPass) copyMaskList.Add(NativeConstants.HB_ACODEC_AAC_PASS);
-            if (job.AllowedPassthruOptions.AudioAllowAC3Pass) copyMaskList.Add(NativeConstants.HB_ACODEC_AC3_PASS);
-            if (job.AllowedPassthruOptions.AudioAllowDTSHDPass) copyMaskList.Add(NativeConstants.HB_ACODEC_DCA_HD_PASS);
-            if (job.AllowedPassthruOptions.AudioAllowDTSPass) copyMaskList.Add(NativeConstants.HB_ACODEC_DCA_PASS);
-            if (job.AllowedPassthruOptions.AudioAllowEAC3Pass) copyMaskList.Add(NativeConstants.HB_ACODEC_EAC3_PASS);
-            if (job.AllowedPassthruOptions.AudioAllowFlacPass) copyMaskList.Add(NativeConstants.HB_ACODEC_FLAC_PASS);
-            if (job.AllowedPassthruOptions.AudioAllowMP3Pass) copyMaskList.Add(NativeConstants.HB_ACODEC_MP3_PASS);
-            if (job.AllowedPassthruOptions.AudioAllowTrueHDPass) copyMaskList.Add(NativeConstants.HB_ACODEC_TRUEHD_PASS);
+            List<string> copyMaskList = new List<string>();
+            if (job.AllowedPassthruOptions.AudioAllowAACPass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.AacPassthru));
+            if (job.AllowedPassthruOptions.AudioAllowAC3Pass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.Ac3Passthrough));
+            if (job.AllowedPassthruOptions.AudioAllowDTSHDPass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.DtsHDPassthrough));
+            if (job.AllowedPassthruOptions.AudioAllowDTSPass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.DtsPassthrough));
+            if (job.AllowedPassthruOptions.AudioAllowEAC3Pass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.EAc3Passthrough));
+            if (job.AllowedPassthruOptions.AudioAllowFlacPass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.FlacPassthru));
+            if (job.AllowedPassthruOptions.AudioAllowMP3Pass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.Mp3Passthru));
+            if (job.AllowedPassthruOptions.AudioAllowTrueHDPass) copyMaskList.Add(EnumHelper<AudioEncoder>.GetShortName(AudioEncoder.TrueHDPassthrough));
             audio.CopyMask = copyMaskList.ToArray();
 
             HBAudioEncoder audioEncoder = HandBrakeEncoderHelpers.GetAudioEncoder(EnumHelper<AudioEncoder>.GetShortName(job.AllowedPassthruOptions.AudioEncoderFallback));
-            audio.FallbackEncoder = audioEncoder.Id;
+            audio.FallbackEncoder = audioEncoder.ShortName;
 
             audio.AudioList = new List<HandBrake.Interop.Interop.Json.Encode.AudioTrack>();
             foreach (AudioTrack item in job.AudioTracks)
@@ -365,7 +364,7 @@ namespace HandBrakeWPF.Services.Encode.Factories
                 {
                     Track = (item.Track.HasValue ? item.Track.Value : 0) - 1,
                     DRC = item.DRC,
-                    Encoder = encoder.Id,
+                    Encoder = encoder.ShortName,
                     Gain = item.Gain,
                     Mixdown = mixdown != null ? mixdown.Id : -1,
                     NormalizeMixLevel = false,
@@ -427,7 +426,7 @@ namespace HandBrakeWPF.Services.Encode.Factories
             // Deinterlace
             if (job.DeinterlaceFilter == DeinterlaceFilter.Yadif)
             {
-                IntPtr settingsPtr = HBFunctions.hb_generate_filter_settings_json((int)hb_filter_ids.HB_FILTER_DEINTERLACE, EnumHelper<Deinterlace>.GetShortName(job.Deinterlace),  null, job.CustomDeinterlace);
+                IntPtr settingsPtr = HBFunctions.hb_generate_filter_settings_json((int)hb_filter_ids.HB_FILTER_DEINTERLACE, job.DeinterlacePreset?.ShortName,  null, job.CustomDeinterlaceSettings);
                 string unparsedJson = Marshal.PtrToStringAnsi(settingsPtr);
                 if (!string.IsNullOrEmpty(unparsedJson))
                 {
@@ -441,7 +440,7 @@ namespace HandBrakeWPF.Services.Encode.Factories
             // Decomb
             if (job.DeinterlaceFilter == DeinterlaceFilter.Decomb)
             {
-                IntPtr settingsPtr = HBFunctions.hb_generate_filter_settings_json((int)hb_filter_ids.HB_FILTER_DECOMB, EnumHelper<Decomb>.GetShortName(job.Decomb), null, job.CustomDecomb);
+                IntPtr settingsPtr = HBFunctions.hb_generate_filter_settings_json((int)hb_filter_ids.HB_FILTER_DECOMB, job.DeinterlacePreset?.ShortName, null, job.CustomDeinterlaceSettings);
                 string unparsedJson = Marshal.PtrToStringAnsi(settingsPtr);
                 if (!string.IsNullOrEmpty(unparsedJson))
                 {
@@ -611,6 +610,7 @@ namespace HandBrakeWPF.Services.Encode.Factories
             if (job.MetaData != null)
             {
                 metaData.Artist = job.MetaData.Artist;
+                metaData.Album = job.MetaData.Album;
                 metaData.AlbumArtist = job.MetaData.AlbumArtist;
                 metaData.Comment = job.MetaData.Comment;
                 metaData.Composer = job.MetaData.Composer;

@@ -109,13 +109,12 @@ namespace HandBrakeWPF.Utilities
 
             logHeader.AppendLine(string.Format("HandBrake {0}", VersionHelper.GetVersion()));
             logHeader.AppendLine(string.Format("OS: {0}", Environment.OSVersion));
-            logHeader.AppendLine(string.Format("CPU: {0}", SystemInfo.GetCpuCount));
             logHeader.AppendLine(string.Format("Ram: {0} MB, ", SystemInfo.TotalPhysicalMemory));
             logHeader.AppendLine(string.Format("GPU Information:{0}{1}", Environment.NewLine, gpuBuilder.ToString().TrimEnd()));
             logHeader.AppendLine(string.Format("Screen: {0}x{1}", SystemInfo.ScreenBounds.Bounds.Width, SystemInfo.ScreenBounds.Bounds.Height));
             logHeader.AppendLine(string.Format("Temp Dir: {0}", Path.GetTempPath()));
             logHeader.AppendLine(string.Format("Install Dir: {0}", Application.StartupPath));
-            logHeader.AppendLine(string.Format("Data Dir: {0}\n", Application.UserAppDataPath));
+            logHeader.AppendLine(string.Format("Data Dir: {0}\n", DirectoryUtilities.GetUserStoragePath(VersionHelper.IsNightly())));
 
             logHeader.AppendLine("-------------------------------------------");
 

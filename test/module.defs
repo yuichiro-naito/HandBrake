@@ -14,7 +14,7 @@ TEST.GCC.L = $(CONTRIB.build/)lib
 TEST.libs = $(LIBHB.a)
 
 TEST.GCC.l = \
-        ass avresample avformat avfilter avcodec avutil swresample postproc mp3lame dvdnav \
+        ass avformat avfilter avcodec avutil avresample swresample postproc mp3lame dvdnav \
         dvdread fribidi \
         samplerate swscale vpx theoraenc theoradec vorbis vorbisenc ogg x264 \
         bluray freetype xml2 bz2 z jansson harfbuzz opus speex lzma
@@ -32,6 +32,10 @@ endif
 
 ifeq (1,$(FEATURE.vce))
     TEST.GCC.D += USE_VCE
+endif
+
+ifeq (1,$(FEATURE.nvenc))
+    TEST.GCC.D += USE_NVENC
 endif
 
 ifeq (1,$(FEATURE.x265))
@@ -77,7 +81,7 @@ else ifeq ($(BUILD.system),linux)
 else ifeq ($(BUILD.system),kfreebsd)
     TEST.GCC.l += pthread dl m
 else ifeq ($(BUILD.system),freebsd)
-    TEST.GCC.L += /usr/local/lib
+    TEST.GCC.L += $(LOCALBASE)/lib
     TEST.GCC.l += pthread m
 else ifeq ($(BUILD.system),solaris)
     TEST.GCC.l += pthread nsl socket

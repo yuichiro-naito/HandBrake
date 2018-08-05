@@ -102,7 +102,7 @@
 
 @property (nonatomic, weak) IBOutlet HBToolbarBadgedItem *showQueueToolbarItem;
 
-@property (nonatomic, unsafe_unretained) IBOutlet NSView *openTitleView;
+@property (nonatomic, weak) IBOutlet NSView *openTitleView;
 @property (nonatomic, readwrite) BOOL scanSpecificTitle;
 @property (nonatomic, readwrite) NSInteger scanSpecificTitleIdx;
 
@@ -226,7 +226,7 @@
     self.presetsPopover.behavior = NSPopoverBehaviorSemitransient;
     self.presetsPopover.delegate = self;
 
-    [fPresetsView loadView];
+    [fPresetsView view];
 
     // Set up the summary view
     self.summaryController = [[HBSummaryViewController alloc] init];

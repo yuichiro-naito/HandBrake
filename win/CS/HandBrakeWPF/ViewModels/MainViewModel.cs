@@ -2207,6 +2207,7 @@ namespace HandBrakeWPF.ViewModels
                     // Tab Settings
                     this.isSettingPreset = true;
                     this.IsModifiedPreset = false;
+                    this.SummaryViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
                     this.PictureSettingsViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
                     this.VideoViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
                     this.FiltersViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
@@ -2215,7 +2216,6 @@ namespace HandBrakeWPF.ViewModels
                     this.ChaptersViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
                     this.AdvancedViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
                     this.MetaDataViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
-                    this.SummaryViewModel.SetPreset(this.selectedPreset, this.CurrentTask);
                     this.isSettingPreset = false;
                 }
             }
@@ -2284,7 +2284,7 @@ namespace HandBrakeWPF.ViewModels
             /* TODO Fix this. */
             Execute.OnUIThread(() =>
             {
-                if (this.queueEditTask != null && this.selectedPreset.Name != this.queueEditTask.SelectedPresetKey)
+                if (this.queueEditTask != null && !string.IsNullOrEmpty(this.queueEditTask.SelectedPresetKey) && this.selectedPreset.Name != this.queueEditTask.SelectedPresetKey)
                 {
                     Preset foundPreset = this.presetService.GetPreset(this.queueEditTask.SelectedPresetKey);
                     if (foundPreset != null)

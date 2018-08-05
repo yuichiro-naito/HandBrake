@@ -1,7 +1,10 @@
+# LOCALBASE is where FreeBSD ports are installed. default is '/usr/local'.
+LOCALBASE  ?= /usr/local
+
 TARGET.dylib.ext = .so
 
-GCC.I       = /usr/local/include
-GCC.L       = /usr/local/lib
+GCC.I       = $(LOCALBASE)/include
+GCC.L       = $(LOCALBASE)/lib
 GCC.D       = LIBICONV_PLUG
 
 GCC.args.dylib = -shared
