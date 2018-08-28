@@ -70,7 +70,7 @@ static const char * const vpx_preset_names[] =
 
 static const char * const h26x_nvenc_preset_names[] =
 {
-    "losslesshp", "lossless", "llhp", "llhq", "ll", "bd", "hq", "hp", "fast", "medium", "slow", "default", NULL
+    "llhp", "llhq", "ll", "bd", "hq", "hp", "fast", "medium", "slow", "default", NULL  // No Lossless "losslesshp", "lossless",
 };
 
 static const char * const h264_nvenc_profile_names[] =
@@ -80,7 +80,7 @@ static const char * const h264_nvenc_profile_names[] =
 
 static const char * const h265_nvenc_profile_names[] =
 {
-    "auto", "main", "main10", "rext", NULL 
+    "auto", "main", NULL // "main10", "rext"  We do not currently support 10bit encodes with this encoder. 
 };
 
 
@@ -347,15 +347,20 @@ int encavcodecInit( hb_work_object_t * w, hb_job_t * job )
         else if ( job->vcodec == HB_VCODEC_FFMPEG_VCE_H264 || job->vcodec == HB_VCODEC_FFMPEG_VCE_H265 )
         {
             char quality[7];
+            char qualityB[7];
+            double adjustedQualityB = job->vquality + 2;
+
             snprintf(quality, 7, "%.2f", job->vquality);
+            snprintf(qualityB, 7, "%.2f", adjustedQualityB);
+
             av_dict_set( &av_opts, "rc", "cqp", 0 );
-            
+           
             av_dict_set( &av_opts, "qp_i", quality, 0 );
             av_dict_set( &av_opts, "qp_p", quality, 0 );
             
             if ( job->vcodec != HB_VCODEC_FFMPEG_VCE_H265 )
             {
-                av_dict_set( &av_opts, "qp_b", quality, 0 );
+                av_dict_set( &av_opts, "qp_b", qualityB, 0 );
             }
             hb_log( "encavcodec: encoding at CQ %.2f", job->vquality );
         }

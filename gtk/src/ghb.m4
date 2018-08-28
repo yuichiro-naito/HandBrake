@@ -7412,7 +7412,7 @@ filter_output([
                             </child>
                             <child>
                               <object class="GtkEntry" id="auto_name_template">
-                                <property name="tooltip_text" translatable="yes">Available Options: {source} {title} {preset} {chapters} {date} {time} {quality} {bitrate}</property>
+                                <property name="tooltip_text" translatable="yes">Available Options: {source} {title} {preset} {chapters} {date} {time} {creation-date} {creation-time} {quality} {bitrate}</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -9026,7 +9026,7 @@ filter_output([
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="adjustment">adjustment24</property>
                     <property name="hexpand">True</property>
-                    <signal name="value-changed" handler="setting_widget_changed_cb" swapped="no"/>
+                    <signal name="value-changed" handler="nonsetting_widget_changed_cb" swapped="no"/>
                   </object>
                   <packing>
                     <property name="position">1</property>

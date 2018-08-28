@@ -73,15 +73,6 @@ static void thread_func( void * );
 
 void hb_avcodec_init()
 {
-#ifdef _WIN64
-    // TODO: retest with swresample
-    // avresample's assembly optimizations can cause crashes under Win x86_64
-    // (see http://bugzilla.libav.org/show_bug.cgi?id=496)
-    // disable AVX and FMA4 as a workaround
-    hb_deep_log(2, "hb_avcodec_init: Windows x86_64, disabling AVX and FMA4");
-    int cpu_flags = av_get_cpu_flags() & ~AV_CPU_FLAG_AVX & ~AV_CPU_FLAG_FMA4;
-    av_set_cpu_flags_mask(cpu_flags);
-#endif
 }
 
 int hb_avcodec_open(AVCodecContext *avctx, AVCodec *codec,
@@ -789,7 +780,7 @@ void hb_set_anamorphic_size2(hb_geometry_t *src_geo,
     int cropped_width = src_geo->width - geo->crop[2] - geo->crop[3];
     int cropped_height = src_geo->height - geo->crop[0] - geo->crop[1];
     double storage_aspect = (double)cropped_width / cropped_height;
-    int mod = geo->modulus ? EVEN(geo->modulus) : 2;
+    int mod = (geo->modulus > 0) ? EVEN(geo->modulus) : 2;
 
     // Sanitize PAR
     if (geo->geometry.par.num == 0 || geo->geometry.par.den == 0)
@@ -1805,11 +1796,10 @@ static void thread_func( void * _h )
         {
             hb_thread_close( &h->work_thread );
 
-            hb_log( "libhb: work result = %d",
-                    h->work_error );
+            hb_log( "libhb: work result = %d", h->work_error );
             hb_lock( h->state_lock );
-            h->state.state                = HB_STATE_WORKDONE;
-            h->state.param.workdone.error = h->work_error;
+            h->state.state               = HB_STATE_WORKDONE;
+            h->state.param.working.error = h->work_error;
 
             hb_unlock( h->state_lock );
         }

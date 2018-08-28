@@ -7,6 +7,7 @@ AM_INIT_AUTOMAKE([1.7.9 foreign dist-bzip2 dist-zip])
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
+AC_USE_SYSTEM_EXTENSIONS
 AC_PROG_CC(gcc clang)
 AC_ISC_POSIX
 AC_PROG_CXX(g++ clang++)
@@ -178,7 +179,7 @@ PKG_CHECK_MODULES(GHB, [$GHB_PACKAGES])
 
 GHB_CFLAGS="$HBINC $GHB_CFLAGS"
 
-HB_LIBS="-lhandbrake -lavformat -lavfilter -lavcodec -lavutil -lavresample -lswresample -lpostproc -ldvdnav -ldvdread -lmp3lame -lvorbis -lvorbisenc -logg -lsamplerate -lx264 -lswscale -ltheoraenc -ltheoradec -lvpx -lz -lbz2 -lbluray -lass -lfontconfig -lfreetype -lxml2 -ljansson -lopus -lspeex -llzma"
+HB_LIBS="-lhandbrake -lavformat -lavfilter -lavcodec -lavutil -lswresample -lpostproc -ldvdnav -ldvdread -lmp3lame -lvorbis -lvorbisenc -logg -lsamplerate -lx264 -lswscale -ltheoraenc -ltheoradec -lvpx -lz -lbz2 -lbluray -lass -lfontconfig -lfreetype -lxml2 -ljansson -lopus -lspeex -llzma"
 
 case $host in
   *-*-mingw*)
