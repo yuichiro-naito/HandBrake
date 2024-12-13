@@ -34,6 +34,7 @@ FFMPEG.CONFIGURE.extra = \
     --disable-filters \
     --disable-hwaccels \
     --disable-vdpau \
+    --disable-vulkan \
     --disable-encoders \
     --enable-libmp3lame \
     --enable-encoder=aac \
