@@ -390,6 +390,7 @@ int qsv_map_mfx_platform_codename(int mfx_platform_codename)
     case MFX_PLATFORM_DG2:
     case MFX_PLATFORM_ALDERLAKE_N:
     case MFX_PLATFORM_KEEMBAY:
+#if (MFX_VERSION >= 2012)
     case MFX_PLATFORM_METEORLAKE:
     case MFX_PLATFORM_BATTLEMAGE:
     case MFX_PLATFORM_ARROWLAKE:
@@ -398,6 +399,7 @@ int qsv_map_mfx_platform_codename(int mfx_platform_codename)
     case MFX_PLATFORM_LUNARLAKE:
         platform = HB_CPU_PLATFORM_INTEL_LNL;
         break;
+#endif
     default:
         platform = HB_CPU_PLATFORM_UNSPECIFIED;
     }
