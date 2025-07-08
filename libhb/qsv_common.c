@@ -930,6 +930,7 @@ static void init_ext_coding_option2(mfxExtCodingOption2 *extCodingOption2)
     extCodingOption2->NumMbPerSlice   = 2040; // 1920x1088/4
 }
 
+#if (MFX_VERSION >= 2012)
 static void init_ext_av1bitstream_option(mfxExtAV1BitstreamParam *extAV1BitstreamParam)
 {
     if (extAV1BitstreamParam == NULL)
@@ -943,7 +944,6 @@ static void init_ext_av1bitstream_option(mfxExtAV1BitstreamParam *extAV1Bitstrea
     extAV1BitstreamParam->WriteIVFHeaders = MFX_CODINGOPTION_OFF;
 }
 
-#if (MFX_VERSION >= 2012)
 static void init_ext_av1screencontent_tools(mfxExtAV1ScreenContentTools *extScreenContentTools)
 {
     if (extScreenContentTools == NULL)
@@ -985,8 +985,8 @@ static int query_capabilities(mfxSession session, int index, mfxVersion version,
     mfxExtChromaLocInfo   extChromaLocInfo;
     mfxExtMasteringDisplayColourVolume  extMasteringDisplayColourVolume;
     mfxExtContentLightLevelInfo         extContentLightLevelInfo;
-    mfxExtAV1BitstreamParam extAV1BitstreamParam;
 #if (MFX_VERSION >= 2012)
+    mfxExtAV1BitstreamParam extAV1BitstreamParam;
     mfxExtAV1ScreenContentTools extAV1ScreenContentToolsParam;
 #endif
     mfxExtHyperModeParam extHyperEncodeParam;
@@ -2696,6 +2696,7 @@ int hb_qsv_select_ffmpeg_options(qsv_data_t * qsv_data, hb_job_t *job, AVDiction
             hb_log("encavcodec: using Low Power mode");
     }
 
+#if (MFX_VERSION >= 2012)
     if((qsv_data->qsv_info->capabilities & HB_QSV_CAP_AV1_SCREENCONTENT) &&
         qsv_data->param.av1ScreenContentToolsParam.IntraBlockCopy)
     {
@@ -2715,6 +2716,7 @@ int hb_qsv_select_ffmpeg_options(qsv_data_t * qsv_data, hb_job_t *job, AVDiction
         hb_log("encavcodec: ScreenContentCoding is enabled Palette %s",
             qsv_data->param.av1ScreenContentToolsParam.Palette ? "on" : "off");
     }
+#endif
 
   // Transcoding Info
   MFX_STRUCT_TO_AV_OPTS(BRCParamMultiplier)
